@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="coords" style="position: absolute;">NO MOVEMENT</div>
+    <div id="follow" style="position: absolute;">O</div>
+    <script>
+        const maxwidth = window.innerWidth;
+        const maxheight = window.innerHeight;
+        let mouseX = 100;
+        let mouseY = 100;
+        let followX = 1;
+        let followY = 1;
+        let dx = 0;
+        let dy = 0;
+        let theta = 0;
+        let dist = 0;
+        //pixels / frame
+        let speed = 5;
+        let going = true;
+        
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function updateDisplay() {
+            const coords = document.getElementById('coords');
+            const follow = document.getElementById('follow');
+            
+            //follower > mouse
+            dx = mouseX - followX;
+            dy = mouseY - followY;
+
+            dist = Math.sqrt(dy**2 + dx**2);
+            theta = Math.atan2(dy, dx) * (180 / Math.PI);
+
+
+            followX += speed * (dx / dist);
+            followY += speed * (dy / dist);
+            
+            
+            
+            coords.textContent = `Mouse: ${mouseX}, ${mouseY} | Follower: ${followX}, ${followY} | Theta: ${theta.toFixed(3)} | Dist: ${dist.toFixed(3)}`;
+            follow.style.left = followX + "px";   // left = X position
+            follow.style.top = followY + "px";    // top = Y position
+
+            if (dist < 5){
+                going = false;
+            }
+
+            
+            if (going){
+                requestAnimationFrame(updateDisplay);
+            }
+        }
+        
+        updateDisplay();
+    </script>
+</body>
+</html>
