@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <div id="coords" style="position: absolute;">NO MOVEMENT</div>
+<div id="coords" style="position: absolute; white-space: pre;">NO MOVEMENT</div>
     <div id="follow" style="position: absolute;">O</div>
     <script>
         const maxwidth = window.innerWidth;
         const maxheight = window.innerHeight;
-        let mouseX = 100;
-        let mouseY = 100;
-        let followX = 1;
-        let followY = 1;
+        let mouseX = 0;
+        let mouseY = 0;
+        let followX = -1;
+        let followY = -1;
         let dx = 0;
         let dy = 0;
         let theta = 0;
         let dist = 0;
-        //pixels / frame
-        let speed = 5;
+        let speed = 5; // pixels / frame
         let going = true;
+        let mouseMoved = false;
         
         document.addEventListener('mousemove', e => {
             mouseX = e.clientX;
             mouseY = e.clientY;
+
+
+            if (!mouseMoved){
+                updateDisplay();
+                mouseMoved = true;
+            }
         });
-        
         function updateDisplay() {
+        
+            if (followX === -1 && followY === -1) {
+                while (!(((maxwidth > followX) && (followX > 0)) && ((maxheight > followY) && (followY > 0)))) {
+                    let deg = Math.random() * 2 * Math.PI;
+                    followX = mouseX + 300 * Math.cos(deg);
+                    followY = mouseY + 300 * Math.sin(deg);
+                }
+            }
+
             const coords = document.getElementById('coords');
             const follow = document.getElementById('follow');
             
@@ -40,7 +54,7 @@
             
             
             
-            coords.textContent = `Mouse: ${mouseX}, ${mouseY} | Follower: ${followX}, ${followY} | Theta: ${theta.toFixed(3)} | Dist: ${dist.toFixed(3)}`;
+            coords.textContent = `Mouse: ${mouseX.toFixed(0)}, ${mouseY.toFixed(0)} | Follower: ${followX.toFixed(3)}, ${followY.toFixed(3)}\nTheta: ${theta.toFixed(3)} | Dist: ${dist.toFixed(3)}`;
             follow.style.left = followX + "px";   // left = X position
             follow.style.top = followY + "px";    // top = Y position
 
@@ -54,7 +68,6 @@
             }
         }
         
-        updateDisplay();
     </script>
 </body>
 </html>
