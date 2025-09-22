@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html>
+<style>
+* {
+    cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAGA60e6kgAAAABJRU5ErkJggg=='), auto !important;
+}
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+</style>
 <body>
 <div id="coords" style="position: absolute; white-space: pre;">NO MOVEMENT</div>
-    <div id="follow" style="position: absolute;">O</div>
+    <div id="follow" style="position: absolute;"></div>
     <script>
         const maxwidth = window.innerWidth;
         const maxheight = window.innerHeight;
         let mouseX = 0;
         let mouseY = 0;
+        
         let followX = -1;
         let followY = -1;
         let dx = 0;
         let dy = 0;
+        let speed = 5; // pixels / frame
+
         let theta = 0;
         let dist = 0;
-        let speed = 5; // pixels / frame
+        
         let going = true;
         let mouseMoved = false;
         
-        document.addEventListener('mousemove', e => {
+        document.addEventListener('click', e => {
             mouseX = e.clientX;
             mouseY = e.clientY;
 
@@ -29,17 +42,20 @@
             }
         });
         function updateDisplay() {
-        
+            const coords = document.getElementById('coords');
+            const follow = document.getElementById('follow');
+            
+            // start the follower on a circle w/ 300px radius, centered around the mouse, start must be in bounds
             if (followX === -1 && followY === -1) {
                 while (!(((maxwidth > followX) && (followX > 0)) && ((maxheight > followY) && (followY > 0)))) {
+                    follow.textContent = 'O';
                     let deg = Math.random() * 2 * Math.PI;
                     followX = mouseX + 300 * Math.cos(deg);
                     followY = mouseY + 300 * Math.sin(deg);
                 }
             }
 
-            const coords = document.getElementById('coords');
-            const follow = document.getElementById('follow');
+            
             
             //follower > mouse
             dx = mouseX - followX;
@@ -52,6 +68,10 @@
             followX += speed * (dx / dist);
             followY += speed * (dy / dist);
             
+            if (followY < 400){
+		    followY = 400
+	    }
+
             
             
             coords.textContent = `Mouse: ${mouseX.toFixed(0)}, ${mouseY.toFixed(0)} | Follower: ${followX.toFixed(3)}, ${followY.toFixed(3)}\nTheta: ${theta.toFixed(3)} | Dist: ${dist.toFixed(3)}`;
