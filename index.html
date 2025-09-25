@@ -112,6 +112,7 @@
         // Stop when close to target
         if (dist < distneeded) {
           going = false;
+	updateDisplay();
         }
       }
       requestAnimationFrame(updateDisplay);
