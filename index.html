@@ -1,124 +1,48 @@
 <!DOCTYPE html>
-
 <html>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James' Site</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 16px;
+            background-color: white;
+            color: black;
+            line-height: 0.5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .title {
+            font-size: 24px;
+            text-decoration: underline;
+        }
+    </style>
+</head>
 <body>
-  <div id="coords" style="position: absolute; white-space: pre;">NO MOVEMENT</div>
-  <div id="target" style="position: absolute;">+</div>
-  <div id="follow" style="position: absolute;"></div>
-  <script>
-    const maxwidth = window.innerWidth;
-    const maxheight = window.innerHeight;
-    let mouseX = 0;
-    let mouseY = 0;
-    let followX = -1;
-    let followY = -1;
-    let dx = 0;
-    let dy = 0;
-    let speed = 3; // pixels / frame
-    let theta = 0;
-    let distneeded = 5;
-    let dist = 0;
-    let going = true;
-    let mouseMoved = false;
-    let c1x = 400;
-    let c1y = 400;
-    let c2x = 500;
-    let c2y = 500;
-
-    function startGame() {
-      drawSquare(c1x, c1y, c2x, c2y);
-      updateDisplay();
-      mouseMoved = true;
-    }
-
-    document.addEventListener('click', e => {
-      const target = document.getElementById("target");
-      mouseX = e.clientX - 4;
-      mouseY = e.clientY - 10;
-      target.style.left = mouseX + "px";
-      target.style.top = mouseY + "px";
-      if (!mouseMoved) {
-        startGame();
-      } else {
-        // Mouse moved again, restart movement
-        going = true;
-      }
-    });
-
-    function drawSquare(x1, y1, x2, y2) {
-      // Calculate position and size
-      const left = Math.min(x1, x2);
-      const top = Math.min(y1, y2);
-      const width = Math.abs(x2 - x1);
-      const height = Math.abs(y2 - y1);
-      // Create square element
-      const square = document.createElement('div');
-      square.style.position = 'absolute';
-      square.style.left = left + 'px';
-      square.style.top = top + 'px';
-      square.style.width = width + 'px';
-      square.style.height = height + 'px';
-      square.style.border = '2px solid red';
-      square.style.background = 'rgba(255, 0, 0, 0.1)';
-      document.body.appendChild(square);
-      return square; // Return element in case you need to modify it later
-    }
-
-    function updateDisplay() {
-      dx = mouseX - followX;
-      dy = mouseY - followY;
-      dist = Math.sqrt(dy ** 2 + dx ** 2);
-      if (going) {
-        const coords = document.getElementById('coords');
-        const follow = document.getElementById('follow');
-        // start the follower on a circle w/ 300px radius, centered around the mouse, start must be in bounds
-        if (followX === -1 && followY === -1) {
-          while (!(((maxwidth > followX) && (followX > 0)) && ((maxheight > followY) && (followY > 0)))) {
-            follow.textContent = 'O';
-            let deg = Math.random() * 2 * Math.PI;
-            followX = mouseX + 300 * Math.cos(deg);
-            followY = mouseY + 300 * Math.sin(deg);
-          }
+    <div class="title">James Nellis' Site</div>
+    <br>
+    <br>
+    <p>Contact: thejamesnellis@gmail.com
+    <span id="copyButton" onclick="copyEmail()" style="
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: 8px;
+    ">copy</span> </p>
+    <script>
+        function copyEmail() {
+            navigator.clipboard.writeText('thejamesnellis@gmail.com');
+            const button = document.getElementById('copyButton');
+            button.textContent = 'copied';
+            setTimeout(() => {
+                button.textContent = 'copy';
+            }, 1250);
         }
-        // follower > mouse
-        theta = Math.atan2(dy, dx) * (180 / Math.PI);
-        followX += speed * (dx / dist);
-        followY += speed * (dy / dist);
+    </script>
 
-        // Instead of teleporting, push the object back
-        if (followX > c1x - 10 && followX < c2x + 3 && followY > c1y - 13 && followY < c2y) {
-          // Find closest wall and push back
-          let distToLeft = followX - c1x;
-          let distToRight = c2x - followX;
-          let distToTop = followY - c1y;
-          let distToBottom = c2y - followY;
-          let minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
-          if (minDist === distToLeft) followX = c1x - 10;
-          else if (minDist === distToRight) followX = c2x + 3;
-          else if (minDist === distToTop) followY = c1y - 13;
-          else followY = c2y;
-        }
-
-        coords.textContent = `Mouse: ${mouseX.toFixed(0)}, ${mouseY.toFixed(0)} | Follower: ${followX.toFixed(3)}, ${followY.toFixed(3)}\nTheta: ${theta.toFixed(3)} | Dist: ${dist.toFixed(3)}`;
-        follow.style.left = followX + "px"; // left = X position
-        follow.style.top = followY + "px"; // top = Y position
-
-        // Stop when close to target
-        if (dist < distneeded) {
-          going = false;
-	updateDisplay();
-        }
-      }
-      requestAnimationFrame(updateDisplay);
-    }
-  </script>
 </body>
 </html>
 
