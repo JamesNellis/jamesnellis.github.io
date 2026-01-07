@@ -1,7 +1,82 @@
 {
+  "main_image": "main.jpeg",
   "carousel_images": [
     "img2.jpg",
     "img1.jpg",
     "img3.jpg"
+  ],
+  "locations": [
+    {
+      "name": "Father's House",
+      "address": "117 Eleventh Street, Providence RI 02906",
+      "instagram": "jimnellis",
+      "image": "img6.jpg",
+      "lat": 41.85467,
+      "lng": -71.39312
+    },
+    {
+      "name": "Dolores",
+      "address": "100 Hope Street, Providence RI 02906",
+      "instagram": "dolorespvd",
+      "image": "img4.jpg",
+      "lat": 41.82199,
+      "lng": -71.39682
+    },
+    {
+      "name": "Artisan Bites",
+      "address": "1375 Park Ave, Cranston RI 02920",
+      "instagram": "artisan_bites_",
+      "image": "img1.jpg",
+      "lat": 41.784343,
+      "lng": -71.4594585
+    },
+    {
+      "name": "Audrey's Coffee House & Lounge",
+      "address": "60 South County Commons Way, South Kingstown, RI 02879",
+      "instagram": "@audreyscoffeelounge",
+      "image": "img2.jpg",
+      "lat": 41.4559773,
+      "lng": -71.4707195
+    },
+    {
+      "name": "Bagels Etc.",
+      "address": "259 County Rd. Barrington, RI",
+      "instagram": "@BagelsEtc",
+      "image": "img5.jpg",
+      "lat": 41.7393151,
+      "lng": -71.3067139
+    },
+    {
+      "name": "Location 1",
+      "address": "101 Sesame St",
+      "instagram": "abcdefg",
+      "image": "img7.jpg",
+      "lat": 41.72199,
+      "lng": -71.59682
+    },
+    {
+      "name": "Location 2",
+      "address": "102 Sesame St",
+      "instagram": "hijklmn",
+      "image": "img7.jpg",
+      "lat": 41.62199,
+      "lng": -71.49682
+    },
+    {
+      "name": "Location 3",
+      "address": "103 Sesame St",
+      "instagram": "opqrstuvw",
+      "image": "img7.jpg",
+      "lat": 41.52199,
+      "lng": -71.39682
+    },
+    {
+      "name": "Location 4",
+      "address": "104 Sesame St",
+      "instagram": "xyz",
+      "image": "img7.jpg",
+      "lat": 41.42199,
+      "lng": -71.29682
+    }
   ]
 }

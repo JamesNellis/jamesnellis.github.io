@@ -12,7 +12,7 @@
 			<a href="#about" class="menu-item">About</a>
 			<a href="#events" class="menu-item">Events</a>
 			<a href="#contact" class="menu-item">Contact</a>
-			<a href="https://www.eventbrite.com/o/ri-food-fights-1718820104" target="_blank" class="menu-item">Tickets</a>
+			<a href="https://www.eventbrite.com/o/ri-food-fights-1718820104" target="_blank" class="menu-item">Passports</a>
 		</div>
 	</nav>
 	<div class="content">
@@ -62,6 +62,11 @@
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				const data = await response.json();
+
+				// Load main image
+				if (data.main_image) {
+					document.getElementById('main-image').src = `imgs/mainpic/${data.main_image}`;
+				}
 
 				// Map filenames to full paths
 				data.carousel_images.forEach(filename => {
@@ -129,8 +134,30 @@
 		window.addEventListener('load', function() {
 			const whatButton = document.querySelector('.pill-button.yellow');
 			selectButton('what', whatButton);
+
+			// Trigger popup functionality
+			document.querySelector('.trigger-popup').addEventListener('click', function() {
+				document.querySelector('.popup-overlay').classList.add('show');
+			});
+
+			// Close popup functionality
+			document.querySelector('.close-popup').addEventListener('click', function() {
+				document.querySelector('.popup-overlay').classList.remove('show');
+			});
 		});
 	</script>
+	<div class="rectangle"></div>
+	<img id="main-image" src="" class="main-image">
+	<button class="trigger-popup"></button>
+	<div class="popup-overlay">
+		<div class="popup-box">
+			<button class="close-popup">×</button>
+			<div class="popup-content">
+				<h2>Get your RHODE ISLAND FOOD FIGHTS passports NOW!</h2>
+				<a href="https://www.eventbrite.com/o/ri-food-fights-1718820104" target="_blank" class="popup-button">HERE</a>
+			</div>
+		</div>
+	</div>
 	<a href="map.html" class="bottom-popup">View Current Event's Map</a>
 </body>
 </html>
