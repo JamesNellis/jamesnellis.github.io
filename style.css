@@ -506,3 +506,15 @@ body {
 		right: 10vw;
 	}
 }
+
+/* Hide main image and rectangle when zoomed in too much or viewport too small */
+@media screen and (max-height: 950px), screen and (max-width: 1000px) {
+	.rectangle,
+	.main-image {
+		display: none;
+	}
+
+	.content {
+		padding-bottom: 100px; /* Reduce padding since image is hidden */
+	}
+}
