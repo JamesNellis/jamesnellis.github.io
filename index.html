@@ -1,8 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>James' Site</title>
+    <title>RIFF</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<h1>James' Site</h1>
+	<div class="top-bar"></div>
+	<nav class="menu-bar">
+		<div class="menu-container">
+			<a href="index.html" class="menu-item">Home</a>
+			<a href="#about" class="menu-item">About</a>
+			<a href="#events" class="menu-item">Events</a>
+			<a href="#contact" class="menu-item">Contact</a>
+			<a href="https://www.eventbrite.com/o/ri-food-fights-1718820104" target="_blank" class="menu-item">Tickets</a>
+		</div>
+	</nav>
+	<div class="content">
+		<div class="main-content">
+			<div class="heading-container">
+				<a href="index.html"><img src="imgs/rifflogo.jpg" alt="RIFF Logo" class="heading-logo"></a>
+				<div class="heading-text">
+					<h1 id="main-heading">Rhode Island Food Fights</h1>
+					<p class="established">Established 2011</p>
+				</div>
+			</div>
+			<div class="button-container">
+				<button class="pill-button yellow" onclick="selectButton('what', this)">WHAT</button>
+				<button class="pill-button" onclick="selectButton('where', this)">WHERE</button>
+				<button class="pill-button" onclick="selectButton('when', this)">WHEN</button>
+				<button class="pill-button" onclick="selectButton('how', this)">HOW</button>
+			</div>
+			<div id="selected-text"></div>
+		</div>
+		<div class="image-section">
+			<div class="image-rotator">
+				<img id="rotating-image" src="" alt="RIFF Image">
+				<button class="nav-arrow left-arrow" onclick="previousImage()">←</button>
+				<button class="nav-arrow right-arrow" onclick="nextImage()">→</button>
+			</div>
+			<a href="https://www.instagram.com/rifoodfights/" target="_blank" class="instagram-link">
+				<svg class="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
+					<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+					<circle cx="18" cy="6" r="1" fill="currentColor"/>
+				</svg>
+				<span>Follow us on Instagram</span>
+			</a>
+		</div>
+	</div>
+	<script>
+		// Load carousel images from references.json
+		const images = [];
+		let currentImageIndex = 0;
+		let rotationInterval;
+
+		// Fetch and load carousel images from JSON
+		async function loadCarouselImages() {
+			try {
+				const response = await fetch('references.json');
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const data = await response.json();
+
+				// Map filenames to full paths
+				data.carousel_images.forEach(filename => {
+					images.push(`imgs/carousel/${filename}`);
+				});
+
+				// Start carousel if we have images
+				if (images.length > 0) {
+					document.getElementById('rotating-image').src = images[0];
+					rotationInterval = setInterval(rotateImage, 3000);
+				} else {
+					console.warn('No carousel images found in references.json');
+				}
+			} catch (error) {
+				console.error('Error loading carousel images:', error);
+				console.error('IMPORTANT: You must run a local web server (e.g., "python3 -m http.server 8000") and access via http://localhost:8000');
+				console.error('Opening index.html directly (file://) will not work due to CORS restrictions.');
+			}
+		}
+
+		function rotateImage() {
+			if (images.length === 0) return;
+			currentImageIndex = (currentImageIndex + 1) % images.length;
+			document.getElementById('rotating-image').src = images[currentImageIndex];
+		}
+
+		function resetRotationTimer() {
+			clearInterval(rotationInterval);
+			rotationInterval = setInterval(rotateImage, 5000);
+		}
+
+		function nextImage() {
+			rotateImage();
+			resetRotationTimer();
+		}
+
+		function previousImage() {
+			if (images.length === 0) return;
+			currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+			document.getElementById('rotating-image').src = images[currentImageIndex];
+			resetRotationTimer();
+		}
+
+		// Load images on page load
+		loadCarouselImages();
+
+		function selectButton(text, button) {
+			// Remove yellow class from all buttons
+			document.querySelectorAll('.pill-button').forEach(btn => {
+				btn.classList.remove('yellow');
+			});
+
+			// Add yellow class to clicked button
+			button.classList.add('yellow');
+
+			// Update the selected text
+			let repeatedText = '';
+			while (repeatedText.length < 70) {
+				repeatedText += text + ' ';
+			}
+			document.getElementById('selected-text').textContent = repeatedText.trim().substring(0, 80);
+		}
+
+		// Auto-select the "WHAT" button on page load
+		window.addEventListener('load', function() {
+			const whatButton = document.querySelector('.pill-button.yellow');
+			selectButton('what', whatButton);
+		});
+	</script>
+	<a href="map.html" class="bottom-popup">View Current Event's Map</a>
+</body>
 </html>

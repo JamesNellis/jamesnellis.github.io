@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RIFF</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .heading-logo {
+            height: 80px;
+        }
+        .content {
+            padding: 10px 20px;
+        }
+        .heading-container {
+            gap: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        #main-heading {
+            font-size: 32px;
+            margin: 10px 0 0 0;
+        }
+        .top-left-logo {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            height: 140px;
+            z-index: 100;
+        }
+        .map-rectangle {
+            width: 900px;
+            height: 750px;
+            border: 2px solid #333;
+            margin-top: 30px;
+            margin-left: 200px;
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .toggle-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .igs-rectangle {
+            width: 400px;
+            height: 730px;
+            background-color: rgb(255, 255, 255);
+            border: 2px solid #ffffff;
+            margin-top: -755px;
+            margin-left: 1150px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .location-list {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .location-entry {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .location-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .location-info {
+            flex: 1;
+        }
+        .location-name-big {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 6px 0;
+            line-height: 1.2;
+        }
+        .location-entry.highlighted .location-name-big {
+            background-color: #ffd700;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .location-address {
+            font-size: 12px;
+            color: #666;
+            margin: 0 0 4px 0;
+            line-height: 1.3;
+        }
+        .location-address a {
+            color: #666;
+            text-decoration: none;
+        }
+        .location-address a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .location-ig {
+            font-size: 11px;
+            color: #888;
+            margin: 0;
+            line-height: 1.3;
+        }
+        .location-ig a {
+            color: #e4405f;
+            text-decoration: underline;
+        }
+        .location-ig a:hover {
+            color: #c13584;
+            text-decoration: underline;
+        }
+        .location-separator {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+	<div class="top-bar"></div>
+	<nav class="menu-bar">
+		<div class="menu-container">
+			<a href="index.html" class="menu-item">Home</a>
+			<a href="#about" class="menu-item">About</a>
+			<a href="#events" class="menu-item">Events</a>
+			<a href="#contact" class="menu-item">Contact</a>
+			<a href="https://www.eventbrite.com/o/ri-food-fights-1718820104" target="_blank" class="menu-item">Tickets</a>
+		</div>
+	</nav>
+	<div class="content">
+		<div class="main-content">
+			<a href="index.html"><img src="imgs/rifflogo.jpg" alt="RIFF Logo" class="top-left-logo"></a>
+			<div class="map-rectangle">
+				<div id="map"></div>
+				<button class="toggle-button" onclick="toggleMapView()" id="mapToggle">Toggle View</button>
+			</div>
+            <div class="igs-rectangle">
+				<div class="location-list" id="location-list"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script>
+		// Coffee shop locations
+		const locations = [
+        {
+				name: "Father's House",
+				address: "117 Eleventh Street, Providence RI 02906",
+				instagram: "jimnellis",
+				image: "imgs/img6.jpg",
+				lat: 41.85467,
+				lng: -71.39312
+			},
+            {
+                name: "Dolores",
+                address: "100 Hope Street, Providence RI 02906",
+                instagram: "dolorespvd",
+                image: "imgs/img4.jpg",
+                lat: 41.82199,
+                lng: -71.39682
+            },
+			{
+				name: "Artisan Bites",
+				address: "1375 Park Ave, Cranston RI 02920",
+				instagram: "artisan_bites_",
+				image: "imgs/img1.jpg",
+				lat: 41.784343,
+				lng: -71.4594585
+			},
+			{
+				name: "Audrey's Coffee House & Lounge",
+				address: "60 South County Commons Way, South Kingstown, RI 02879",
+				instagram: "@audreyscoffeelounge",
+				image: "imgs/img2.jpg",
+				lat: 41.4559773,
+				lng: -71.4707195
+			},
+			{
+				name: "Bagels Etc.",
+				address: "259 County Rd. Barrington, RI",
+				instagram: "@BagelsEtc",
+				image: "imgs/img5.jpg",
+				lat: 41.7393151,
+				lng: -71.3067139
+			},
+            {
+                name: "Location 1",
+                address: "101 Sesame St",
+                instagram: "abcdefg",
+                image: "imgs/img7.jpg",
+                lat: 41.72199,
+                lng: -71.59682
+            },
+            {
+                name: "Location 2",
+                address: "102 Sesame St",
+                instagram: "hijklmn",
+                image: "imgs/img7.jpg",
+                lat: 41.62199,
+                lng: -71.49682
+            },
+            {
+                name: "Location 3",
+                address: "103 Sesame St",
+                instagram: "opqrstuvw",
+                image: "imgs/img7.jpg",
+                lat: 41.52199,
+                lng: -71.39682
+            },      
+            {
+                name: "Location 4",
+                address: "104 Sesame St",
+                instagram: "xyz",
+                image: "imgs/img7.jpg",
+                lat: 41.42199,
+                lng: -71.29682
+            }
+		];
+
+		// Initialize map centered on Rhode Island
+		const map = L.map('map').setView([41.5801, -71.4774], 10);
+
+		// Define map themes
+		const mapThemes = {
+			transport: {
+				url: 'https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38',
+				attribution: '© Thunderforest, © OpenStreetMap contributors',
+				maxZoom: 18
+			},
+			satellite: {
+				url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+				attribution: '© Esri, Maxar, Earthstar Geographics',
+				maxZoom: 18
+			}
+		};
+
+		// Add default Transport layer
+		let currentLayer = L.tileLayer(mapThemes.transport.url, {
+			attribution: mapThemes.transport.attribution,
+			maxZoom: mapThemes.transport.maxZoom
+		}).addTo(map);
+
+		// Track current view mode
+		let currentView = 'transport';
+
+		// Function to toggle between transport and satellite
+		function toggleMapView() {
+			const button = document.getElementById('mapToggle');
+
+			// Remove current layer
+			map.removeLayer(currentLayer);
+
+			if (currentView === 'transport') {
+				// Switch to satellite
+				currentLayer = L.tileLayer(mapThemes.satellite.url, {
+					attribution: mapThemes.satellite.attribution,
+					maxZoom: mapThemes.satellite.maxZoom
+				}).addTo(map);
+				currentView = 'satellite';
+				button.textContent = 'Toggle View';
+			} else {
+				// Switch to transport
+				currentLayer = L.tileLayer(mapThemes.transport.url, {
+					attribution: mapThemes.transport.attribution,
+					maxZoom: mapThemes.transport.maxZoom
+				}).addTo(map);
+				currentView = 'transport';
+				button.textContent = 'Toggle View';
+			}
+		}
+
+		// Create custom marker icon
+		const locationIcon = L.divIcon({
+			className: 'custom-location-icon',
+			html: '<div style="background-color: #dc3545; width: 20px; height: 20px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">📍</div>',
+			iconSize: [26, 26],
+			iconAnchor: [13, 13]
+		});
+
+		// Add markers for each location
+		locations.forEach((location, index) => {
+			const marker = L.marker([location.lat, location.lng], {icon: locationIcon}).addTo(map);
+
+			// Add click handler to highlight corresponding list entry
+			marker.on('click', function() {
+				// Remove highlight from all entries
+				document.querySelectorAll('.location-entry').forEach(entry => {
+					entry.classList.remove('highlighted');
+				});
+				// Highlight the clicked location
+				const listEntry = document.getElementById(`location-${index}`);
+				if (listEntry) {
+					listEntry.classList.add('highlighted');
+					// Scroll to the entry
+					listEntry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				}
+			});
+		});
+
+		// Fit map to show all markers
+		const group = new L.featureGroup(locations.map(loc =>
+			L.marker([loc.lat, loc.lng])
+		));
+		map.fitBounds(group.getBounds().pad(0.1));
+
+		// Populate location list
+		const locationListDiv = document.getElementById('location-list');
+		let content = '';
+		locations.forEach((location, index) => {
+			const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.name + ' ' + location.address)}`;
+			const igHandle = location.instagram.replace('@', '');
+			const igUrl = `https://instagram.com/${igHandle}`;
+			const displayHandle = location.instagram.startsWith('@') ? location.instagram : '@' + location.instagram;
+
+			content += `<div class="location-entry" id="location-${index}">`;
+			content += `<img src="${location.image}" alt="${location.name}" class="location-image">`;
+			content += `<div class="location-info">`;
+			content += `<div class="location-name-big">${location.name}</div>`;
+			content += `<div class="location-address"><a href="${mapsUrl}" target="_blank">${location.address}</a></div>`;
+			content += `<div class="location-ig">Instagram: <a href="${igUrl}" target="_blank">${displayHandle}</a></div>`;
+			content += `</div>`;
+			content += `</div>`;
+
+			if (index < locations.length - 1) {
+				content += `<hr class="location-separator">`;
+			}
+		});
+		locationListDiv.innerHTML = content;
+	</script>
+</body>
+</html>
