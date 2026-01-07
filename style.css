@@ -57,8 +57,8 @@ body {
 }
 
 .image-rotator {
-	width: 650px;
-	height: 650px;
+	width: min(650px, 45vw);
+	height: min(650px, 45vw);
 	margin-top: 20px;
 	position: relative;
 }
@@ -251,7 +251,7 @@ body {
 .bottom-popup {
 	position: fixed;
 	bottom: 0;
-	right: 150px;
+	right: max(150px, 10vw);
 	width: auto;
 	height: 60px;
 	background-color: #f899c5;
@@ -283,21 +283,21 @@ body {
 }
 
 .rectangle {
-	width: 800px;
-	height: 400px;
+	width: min(600px, calc(50vw + 5px));
+	height: min(500px, calc(25vh + 5px));
 	border: 2px solid #000;
 	position: fixed;
-	bottom: 100px;
-	left: 150px;
+	bottom: 148px;
+	left: max(150px, 5vw);
 }
 
 .main-image {
-	width: 805px;
-	height: 405px;
+	width: min(605px, calc(50vw + 5px));
+	height: min(505px, calc(25vh + 5px));
 	object-fit: cover;
 	position: fixed;
-	bottom: 100px;
-	left: 150px;
+	bottom: 150px;
+	left: max(150px, 5vw);
 }
 
 .popup-overlay {
@@ -318,8 +318,9 @@ body {
 }
 
 .popup-box {
-	width: 600px;
-	height: 400px;
+	width: min(600px, 90vw);
+	height: auto;
+	min-height: 400px;
 	background-color: rgb(188, 99, 209);
 	border: 2px solid #333;
 	position: relative;
@@ -365,9 +366,9 @@ body {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
-	padding: 40px;
+	padding: 60px 40px 40px 40px;
 	text-align: center;
-	margin-top: -40px;
+	margin-top: 0;
 }
 
 .popup-content h2 {
@@ -413,4 +414,95 @@ body {
 	border: none;
 	cursor: pointer;
 	z-index: 1000;
+}
+
+/* Responsive breakpoints for laptops */
+@media screen and (max-width: 1366px) {
+	.image-rotator {
+		width: min(550px, 45vw);
+		height: min(550px, 45vw);
+	}
+
+	.heading-logo {
+		height: 150px;
+	}
+
+	#main-heading {
+		font-size: 42px;
+	}
+
+	.pill-button {
+		font-size: 22px;
+		padding: 18px 50px;
+	}
+
+	#selected-text {
+		font-size: 32px;
+	}
+
+	.content {
+		padding-bottom: 450px; /* Add space for fixed bottom image */
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	.content {
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		padding-bottom: 450px; /* Add space for fixed bottom image */
+	}
+
+	.image-section {
+		margin-right: 0;
+		order: 2;
+		margin-bottom: 50px; /* Extra space to prevent overlap */
+	}
+
+	.main-content {
+		order: 1;
+	}
+
+	.image-rotator {
+		width: min(500px, 80vw);
+		height: min(500px, 80vw);
+	}
+
+	.heading-logo {
+		height: 120px;
+	}
+
+	#main-heading {
+		font-size: 36px;
+	}
+
+	.pill-button {
+		font-size: 20px;
+		padding: 15px 40px;
+	}
+
+	.button-container {
+		margin-left: 20px;
+	}
+
+	#selected-text {
+		font-size: 28px;
+		margin-left: 20px;
+	}
+
+	.rectangle {
+		width: min(600px, 80vw);
+		height: min(300px, 20vh);
+		left: 10vw;
+	}
+
+	.main-image {
+		width: min(605px, calc(80vw + 5px));
+		height: min(305px, calc(20vh + 5px));
+		left: 10vw;
+	}
+
+	.bottom-popup {
+		right: 10vw;
+	}
 }
